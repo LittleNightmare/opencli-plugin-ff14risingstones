@@ -1,6 +1,6 @@
 {
   "name": "opencli-plugin-ff14risingstones",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "FF14 国服石之家社区 OpenCLI adapters",
   "opencli": ">=1.7.22"
 }
