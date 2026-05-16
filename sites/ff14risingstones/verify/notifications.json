@@ -1,0 +1,30 @@
+{
+  "args": {},
+  "expect": {
+    "rowCount": {
+      "min": 10,
+      "max": 10
+    },
+    "columns": [
+      "key",
+      "name",
+      "count",
+      "url"
+    ],
+    "types": {
+      "key": "string",
+      "name": "string",
+      "count": "number",
+      "url": "string"
+    },
+    "patterns": {
+      "key": "^(system|at|comment|like|recruit|recruitResponse|recruitParty|recruitGuild|recruitOther|newFans)$",
+      "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/index\\.html#/(message|recruit|me)/"
+    },
+    "notEmpty": [
+      "key",
+      "name",
+      "url"
+    ]
+  }
+}

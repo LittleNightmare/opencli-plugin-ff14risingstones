@@ -1,0 +1,46 @@
+{
+  "postsList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/posts/postsList",
+    "method": "GET",
+    "params": {
+      "required": ["type", "page", "limit"],
+      "optional": ["is_top", "is_refine", "part_id", "hotType", "order"]
+    },
+    "response": "data.rows[] 帖子/攻略列表，code=10000 表示成功",
+    "verified_at": "2026-05-16",
+    "notes": "type=1 为社区帖子，type=2 为攻略；公开接口裸 fetch 可用，Referer 指向 pc/index.html 更稳。"
+  },
+  "search": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/common/search",
+    "method": "GET",
+    "params": {
+      "required": ["type", "keywords", "page", "limit"],
+      "optional": ["part_id", "orderBy", "pageTime"]
+    },
+    "response": "data.rows[] 搜索结果，字段与 postsList 基本一致",
+    "verified_at": "2026-05-16",
+    "notes": "type=1 搜帖子，type=2 搜攻略；orderBy=comment 可按评论热度返回。"
+  },
+  "getUserInfo": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/userInfo/getUserInfo",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": ["tempsuid"]
+    },
+    "response": "data 当前登录角色档案，含 characterDetail、careerLevel、achieveInfo 等私有字段",
+    "verified_at": "2026-05-16",
+    "notes": "需要登录态 cookie；adapter 使用 browser:true，在页面上下文 fetch 并携带 credentials: include，不保存 cookie。"
+  },
+  "getTip": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/sysMsg/getTip",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": ["tempsuid"]
+    },
+    "response": "data 各类消息/招募未读计数",
+    "verified_at": "2026-05-16",
+    "notes": "需要登录态 cookie；返回 sysNum、atMsgNum、commentMsgNum、beLikedMsgNum、recruit*Tip 等字段。"
+  }
+}

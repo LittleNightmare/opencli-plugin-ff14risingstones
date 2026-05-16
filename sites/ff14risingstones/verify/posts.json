@@ -1,0 +1,56 @@
+{
+  "args": {
+    "limit": 3
+  },
+  "expect": {
+    "rowCount": {
+      "min": 1,
+      "max": 3
+    },
+    "columns": [
+      "rank",
+      "postId",
+      "kind",
+      "title",
+      "category",
+      "author",
+      "server",
+      "commentCount",
+      "readCount",
+      "likeCount",
+      "createdTime",
+      "url"
+    ],
+    "types": {
+      "rank": "number",
+      "postId": "string",
+      "kind": "string",
+      "title": "string",
+      "category": "string|null",
+      "author": "string|null",
+      "server": "string|null",
+      "commentCount": "number|null",
+      "readCount": "number|null",
+      "likeCount": "number|null",
+      "createdTime": "string|null",
+      "url": "string"
+    },
+    "patterns": {
+      "postId": "^\\d+$",
+      "kind": "^(post|strat)$",
+      "createdTime": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+08:00$",
+      "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/index\\.html#/(post|strat)/detail/\\d+$"
+    },
+    "notEmpty": [
+      "postId",
+      "title",
+      "category",
+      "author",
+      "url"
+    ],
+    "mustBeTruthy": [
+      "rank",
+      "readCount"
+    ]
+  }
+}
