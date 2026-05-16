@@ -1,3 +1,26 @@
+## 2026-05-16 真实招募命令维护记录
+
+将 `recruit` 从配置字典扩展为真实招募列表/详情 adapter：
+- `--view list/detail/config` 分别读取真实招募列表、单条详情和筛选配置字典；默认 `list`。
+- 公开验证可用的真实列表/详情：副本 `recruitFbList/getRecruitFbDetail`、萌新 `recruitNeList/getNeDetail`、其他 `recruitOtherList/getOtherDetail`、RP `recruitRpList/getRpDetail`。
+- 部队招待 `recruitGuildList/getRecruitGuildDetail` 与网页表现一致需要登录态；当前 `recruit` 是 `Strategy.PUBLIC`/`browser:false`，不会读取 Chrome 登录态，未登录返回 `code=10403/msg=请先登录` 时会转成 `AuthRequiredError`，不伪造空结果。如需部队招待列表，应另做 COOKIE/browser-backed 命令。
+- 筛选配置来自 `getJobConfigList`、`styleConfigList`、`getFbConfigList`、`fbLabelList`、`guildLabelList`、`categoryConfigList` 和 `groupAndRole/getAreaAndGroupList`；`--kind area` 会同时输出大区行和服务器行，服务器行 `summary` 中包含 `areaId`/`groupId`。
+- 副本招募 API 的 `position` 不是职业 ID；`--job` 不再透传给 API，而是请求最多 50 条后按 `need_job`/`jobInfo` 本地过滤，避免接口返回“位置信息不合法”。
+- 外部交叉验证：DIYgod/RSSHub 使用 `getNeDetail`、`getRecruitFbDetail`、`getRecruitGuildDetail` 作为石之家招募详情源，并记录详情路由映射。
+- 仍然只读：不发布、更新、删除、打磨或响应招募。
+
+追加 `recruit-guild` 登录态命令：
+- OpenCLI 的 `strategy`/`browser` 是按 command 注册，不能只让 `recruit --type guild` 这个参数分支变成 COOKIE；因此保留 `recruit` 为 PUBLIC，新增 `recruit-guild` 使用 `Strategy.COOKIE`/`browser:true`。
+- `recruit-guild` 在 `#/recruit/guild` 页面上下文中用 `credentials: include` 调用 `recruitGuildList` 与 `getRecruitGuildDetail`，只读部队招待列表/详情。
+- 不保存账号密码、cookie 或原始私有响应；不响应招募、不修改/打磨/下架招募。
+
+## 2026-05-16 招募配置命令维护记录
+
+补齐 `recruit` adapter 暴露与记录：
+- `recruit` 调用 `/api/home/recruit/getJobConfigList` 和 `/api/home/recruit/styleConfigList`，读取公开的职业配置与玩法风格配置；无需登录态。
+- 输出只包含配置入口与招募页面 URL，不读取具体招募申请，也不提交申请/应募等写操作。
+- 本次同步补齐 `index.js` 注册、`npm run check` 覆盖、README 用法和 endpoint inventory。
+
 ## 2026-05-16 签到命令维护记录
 
 追加签到 adapter：

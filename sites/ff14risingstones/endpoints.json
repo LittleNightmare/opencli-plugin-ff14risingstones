@@ -21,6 +21,160 @@
     "verified_at": "2026-05-16",
     "notes": "type=1 搜帖子，type=2 搜攻略；orderBy=comment 可按评论热度返回。"
   },
+  "getJobConfigList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getJobConfigList",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": []
+    },
+    "response": "data 按职业分类分组的招募职业配置，code=10000 表示成功",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；recruit adapter 将分组对象展平成 kind=job 的表格行。"
+  },
+  "styleConfigList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/styleConfigList",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": []
+    },
+    "response": "data[] 招募玩法风格配置，code=10000 表示成功",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；recruit adapter 输出为 kind=style 的表格行，并链接到招募部队入口。"
+  },
+  "recruitFbList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitFbList",
+    "method": "GET",
+    "params": {
+      "required": ["page", "limit"],
+      "optional": ["fb_name", "fb_type", "position", "team_composition", "target_area_id", "target_group_id", "label", "son_team_position"]
+    },
+    "response": "data.count + data.rows[] 副本招募列表，含 fb_type、fb_name、progress、strategy、jobInfo、labelInfo 等字段",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；网页 party 页使用 limit=9。"
+  },
+  "getRecruitFbDetail": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getRecruitFbDetail",
+    "method": "GET",
+    "params": {
+      "required": ["id"],
+      "optional": []
+    },
+    "response": "data 单条副本招募详情，含 team_detail_mask、recruit_require_mask、strategy_desc_mask、need_job",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；RSSHub 也使用该详情接口。"
+  },
+  "recruitNeList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitNeList",
+    "method": "GET",
+    "params": {
+      "required": ["page", "limit"],
+      "optional": ["style", "identity", "target_area_id", "target_group_id"]
+    },
+    "response": "data.rows[] 萌新招待列表，含 title、identity、styleInfo、detail_mask、weekday_time、weekend_time",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；网页 beginner 页使用 style 多选过滤。"
+  },
+  "getNeDetail": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getNeDetail",
+    "method": "GET",
+    "params": {
+      "required": ["id"],
+      "optional": []
+    },
+    "response": "data 单条萌新招待详情，含 detail_mask、styleInfo、userInfo",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用；RSSHub 也使用该详情接口。"
+  },
+  "recruitGuildList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitGuildList",
+    "method": "GET",
+    "params": {
+      "required": ["page", "limit"],
+      "optional": ["guild_name", "active_member_num", "label", "target_area_id", "target_group_id"]
+    },
+    "response": "未登录返回 code=10403/msg=请先登录；登录后为部队招待列表",
+    "verified_at": "2026-05-16",
+    "notes": "与其他公开招募不同，部队招待列表接口要求登录态；recruit PUBLIC adapter 会明确抛 AuthRequiredError，recruit-guild COOKIE adapter 在页面上下文携带 Chrome cookie 读取。"
+  },
+  "getRecruitGuildDetail": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getRecruitGuildDetail",
+    "method": "GET",
+    "params": {
+      "required": ["id"],
+      "optional": []
+    },
+    "response": "登录态下返回部队招待详情；未上架/无权限返回非 10000 code",
+    "verified_at": "2026-05-16",
+    "notes": "RSSHub 使用该详情接口；recruit-guild COOKIE adapter 在页面上下文携带 Chrome cookie 读取。"
+  },
+  "recruitOtherList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitOtherList",
+    "method": "GET",
+    "params": {
+      "required": ["page", "limit"],
+      "optional": ["category", "target_area_id", "target_group_id"]
+    },
+    "response": "data.count + data.rows[] 其他招募列表，含 title、category_name、detail_mask、cover_pic",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用。"
+  },
+  "getOtherDetail": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getOtherDetail",
+    "method": "GET",
+    "params": {
+      "required": ["id"],
+      "optional": []
+    },
+    "response": "data 单条其他招募详情，含 title、detail_mask、category_name、userInfo",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用。"
+  },
+  "recruitRpList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitRpList",
+    "method": "GET",
+    "params": {
+      "required": ["page", "limit"],
+      "optional": ["rp_name", "rp_type", "act_status", "order", "rp_area_id", "rp_group_id"]
+    },
+    "response": "data.count + data.rows[] RP 招募列表，含 rp_name、profile、open_time、star_count、comment_score",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用。"
+  },
+  "getRpDetail": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getRpDetail",
+    "method": "GET",
+    "params": {
+      "required": ["id"],
+      "optional": []
+    },
+    "response": "data 单条 RP 招募详情，含 profile、detail_mask、address、open_time、star_count",
+    "verified_at": "2026-05-16",
+    "notes": "公开接口裸 fetch 可用。"
+  },
+  "recruitConfigLists": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/{getFbConfigList,fbLabelList,guildLabelList,categoryConfigList}",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": []
+    },
+    "response": "副本、标签、部队标签、其他招募分类配置字典，code=10000 表示成功",
+    "verified_at": "2026-05-16",
+    "notes": "用于 recruit --view config 的筛选项发现。"
+  },
+  "getAreaAndGroupList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/groupAndRole/getAreaAndGroupList",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": []
+    },
+    "response": "data[] 大区与服务器列表，含 AreaID/AreaName/vGroup[].GroupID/GroupName",
+    "verified_at": "2026-05-16",
+    "notes": "用于 recruit 的 areaId/groupId 筛选项发现。"
+  },
   "getUserInfo": {
     "url": "https://apiff14risingstones.web.sdo.com/api/home/userInfo/getUserInfo",
     "method": "GET",
