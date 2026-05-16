@@ -1,6 +1,6 @@
 {
   "name": "opencli-plugin-ff14risingstones",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "FF14 国服石之家社区 OpenCLI adapters",
   "license": "Apache-2.0",
@@ -15,7 +15,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "check": "node --check index.js && node --check commands/posts.js && node --check commands/me.js && node --check commands/notifications.js && node --check commands/checkin.js",
+    "check": "node --check index.js && node --check commands/posts.js && node --check commands/recruit.js && node --check commands/recruit-guild.js && node --check commands/me.js && node --check commands/notifications.js && node --check commands/checkin.js",
     "pack:dry-run": "npm pack --dry-run"
   },
   "files": [
