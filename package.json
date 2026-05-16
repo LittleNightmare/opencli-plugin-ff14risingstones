@@ -15,7 +15,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "check": "node --check index.js && node --check commands/posts.js && node --check commands/me.js && node --check commands/notifications.js",
+    "check": "node --check index.js && node --check commands/posts.js && node --check commands/me.js && node --check commands/notifications.js && node --check commands/checkin.js",
     "pack:dry-run": "npm pack --dry-run"
   },
   "files": [
@@ -30,5 +30,10 @@
   ],
   "peerDependencies": {
     "@jackwener/opencli": ">=1.7.22"
+  },
+  "peerDependenciesMeta": {
+    "@jackwener/opencli": {
+      "optional": true
+    }
   }
 }

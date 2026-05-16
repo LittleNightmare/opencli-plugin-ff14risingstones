@@ -1,0 +1,44 @@
+{
+  "args": {
+    "view": "rewards"
+  },
+  "expect": {
+    "rowCount": {
+      "min": 1
+    },
+    "columns": [
+      "kind",
+      "rank",
+      "date",
+      "name",
+      "count",
+      "status",
+      "description",
+      "message",
+      "url"
+    ],
+    "types": {
+      "kind": "string",
+      "rank": "number",
+      "date": "string|null",
+      "name": "string|null",
+      "count": "number|null",
+      "status": "string|null",
+      "description": "string|null",
+      "message": "string|null",
+      "url": "string"
+    },
+    "patterns": {
+      "kind": "^(log|reward)$",
+      "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/index\\.html#/me/signCalendar$"
+    },
+    "notEmpty": [
+      "kind",
+      "name",
+      "url"
+    ],
+    "mustBeTruthy": [
+      "rank"
+    ]
+  }
+}
