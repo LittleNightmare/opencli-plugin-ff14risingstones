@@ -1,0 +1,33 @@
+{
+  "name": "opencli-plugin-ff14risingstones",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "FF14 国服石之家社区 OpenCLI adapters",
+  "license": "Apache-2.0",
+  "keywords": [
+    "opencli-plugin",
+    "opencli",
+    "ff14",
+    "final-fantasy-xiv",
+    "risingstones"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check": "node --check posts.js && node --check me.js && node --check notifications.js",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "files": [
+    "*.js",
+    "LICENSE",
+    "NOTICE",
+    "opencli-plugin.json",
+    "README.md",
+    "sites/ff14risingstones/**/*.json",
+    "sites/ff14risingstones/**/*.md"
+  ],
+  "peerDependencies": {
+    "@jackwener/opencli": ">=1.7.22"
+  }
+}
