@@ -1,0 +1,43 @@
+{
+  "args": {
+    "kind": "glamour"
+  },
+  "expect": {
+    "rowCount": {
+      "min": 1,
+      "max": 10
+    },
+    "columns": [
+      "view",
+      "kind",
+      "rank",
+      "metric",
+      "label",
+      "value",
+      "unit",
+      "detail",
+      "updatedTime",
+      "url"
+    ],
+    "types": {
+      "view": "string",
+      "kind": "string",
+      "rank": "number",
+      "metric": "string",
+      "label": "string",
+      "url": "string"
+    },
+    "patterns": {
+      "view": "^(summary|routes)$",
+      "kind": "^(frontline|ultimate|fishing|savage|glamour|occult|deepdungeon)$",
+      "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/index\\.html#/statistics/(frontline|ultimate|fishing|savage|glamour|occult|deepdungeon)$"
+    },
+    "notEmpty": [
+      "view",
+      "kind",
+      "metric",
+      "label",
+      "url"
+    ]
+  }
+}

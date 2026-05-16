@@ -1,3 +1,11 @@
+## 2026-05-16 统计入口命令维护记录
+
+补齐 `statistics` adapter 暴露与记录：
+- `statistics` 使用 `Strategy.COOKIE`/`browser:true`，在 `#/statistics/glamour` 页面上下文中用 `credentials: include` 读取当前登录角色的 `/api/home/dataCenter/*` 统计接口。
+- `--view summary` 输出真实统计总览指标；`--view routes` 保留 `frontline`、`ultimate`、`fishing`、`savage`、`glamour`、`occult`、`deepdungeon` 七个统计页入口。
+- 已实测可读：战场 `frontline1TotalNew`、钓鱼 `fishTotal1`、绝境 `gaoNanFirst1`、零式 `getLingShiTotal`、幻化 `getDressTotal7`；新月岛 `getMKDTotal1` 和深层迷宫 `getDDTerr1` 在当前角色无数据时返回空结果。
+- 仍然只读：不保存账号密码、cookie 或完整私有响应；`--kind all` 会跳过当前角色无数据的统计类型，单独查询无数据类型会抛 `EmptyResultError`。
+
 ## 2026-05-16 真实招募命令维护记录
 
 将 `recruit` 从配置字典扩展为真实招募列表/详情 adapter：

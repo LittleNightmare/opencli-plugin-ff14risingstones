@@ -175,6 +175,17 @@
     "verified_at": "2026-05-16",
     "notes": "用于 recruit 的 areaId/groupId 筛选项发现。"
   },
+  "statisticsDataCenter": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/dataCenter/{frontline1TotalNew,fishTotal1,gaoNanFirst1,getLingShiTotal,getDressTotal7,getMKDTotal1,getDDTerr1}",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": ["dd_type"]
+    },
+    "response": "当前登录角色统计数据；code=10000 表示成功，data 通常为数组；无对应玩法数据时可能为空数组",
+    "verified_at": "2026-05-16",
+    "notes": "需要登录态 cookie；statistics adapter 使用 browser:true 在页面上下文 fetch。summary 视图输出扁平 metric/value/unit 行，routes 视图保留网页入口。官方 bundle 还暴露 frontline2WeekNew/frontline3JobNew/frontline4Best/frontline5Map/frontline6MapJob、fishNum2/fishBait3/fishBig4/fishAchieve5、gaoNanTeam2/gaoNanJob3/gaoNanFriend4/gaoNanDeadPoint5/gaoNanPhase6、getDressRace1/getDressColor2/getDressOrnament3/getDressVanity4/getDressFullset5、getMKDSupportJob2/getMKDItemUse3/getMKDItemGet4/getMKDItemBox5/getMKDIHistory6/getMKDAchieve7/getMKDLight8、getDDGaoNan2/getDDItem3/getDDHistory4/getDDAchieve5/getDDDeadPoint6/getDDFirstTeam7，可后续扩展 detail 视图。"
+  },
   "getUserInfo": {
     "url": "https://apiff14risingstones.web.sdo.com/api/home/userInfo/getUserInfo",
     "method": "GET",
