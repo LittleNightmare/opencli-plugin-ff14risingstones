@@ -42,5 +42,38 @@
     "response": "data 各类消息/招募未读计数",
     "verified_at": "2026-05-16",
     "notes": "需要登录态 cookie；返回 sysNum、atMsgNum、commentMsgNum、beLikedMsgNum、recruit*Tip 等字段。"
+  },
+  "signRewardList": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/signRewardList",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": ["tempsuid"]
+    },
+    "response": "data 签到奖励列表；未登录返回 code=10403/msg=请先登录",
+    "verified_at": "2026-05-16",
+    "notes": "需要登录态 cookie；只读奖励列表，不会执行签到。公开代码线索来自 FF14CN/Sarean-arsenal 与 StarHeartHunt/ff14risingstone_sign_task。"
+  },
+  "mySignLog": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/mySignLog",
+    "method": "GET",
+    "params": {
+      "required": ["month"],
+      "optional": ["tempsuid"]
+    },
+    "response": "data 指定月份签到日志；未登录返回 code=10403/msg=请先登录",
+    "verified_at": "2026-05-16",
+    "notes": "month=YYYY-MM；只读日志接口，不会执行签到。"
+  },
+  "signIn": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/signIn",
+    "method": "POST",
+    "params": {
+      "required": [],
+      "optional": ["tempsuid"]
+    },
+    "response": "每日签到执行结果；公开实现显示 code=10000 为签到成功，code=10001 为已签到/无需重复签到",
+    "verified_at": "2026-05-16",
+    "notes": "需要登录态 cookie；仅 checkin --action sign 显式调用。公开代码线索来自 FF14CN/Sarean-arsenal signIn.py 与 StarHeartHunt/ff14risingstone_sign_task client.py。"
   }
 }

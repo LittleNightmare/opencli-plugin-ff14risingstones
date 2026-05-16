@@ -1,3 +1,10 @@
+## 2026-05-16 签到命令维护记录
+
+追加签到 adapter：
+- `checkin` 默认调用 `/api/home/sign/signRewardList` 和 `/api/home/sign/mySignLog?month=YYYY-MM` 查看签到奖励/日志；`--action sign` 显式调用 `POST /api/home/sign/signIn` 执行每日签到；需要登录态 cookie，未登录接口返回 `code=10403`。
+- 未实现累计奖励领取 `POST /api/home/sign/getSignReward`，因为这不是每日签到，而是领取 10/20/28 天等奖励；如后续增加，应单独显式 action。
+- 公开参考：GitHub 上 FF14CN/Sarean-arsenal 与 StarHeartHunt/ff14risingstone_sign_task 提供签到奖励/日志/每日签到接口线索。
+
 ## 2026-05-16 登录态命令维护记录
 
 追加登录态 adapter：
