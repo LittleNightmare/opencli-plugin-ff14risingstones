@@ -147,9 +147,11 @@ opencli ff14risingstones posts --query 零式 --limit 5 -f json
 
 ```text
 .
-├── posts.js                         # 公开帖子/攻略列表与搜索命令
-├── me.js                            # 当前登录角色档案命令
-├── notifications.js                 # 未读消息计数命令
+├── index.js                         # 插件入口：导入并注册所有命令
+├── commands/
+│   ├── posts.js                     # 公开帖子/攻略列表与搜索命令
+│   ├── me.js                        # 当前登录角色档案命令
+│   └── notifications.js             # 未读消息计数命令
 ├── opencli-plugin.json              # OpenCLI 插件元数据
 ├── package.json                     # npm/开发脚本元数据
 ├── sites/ff14risingstones/
@@ -159,7 +161,7 @@ opencli ff14risingstones posts --query 零式 --limit 5 -f json
 └── README.md
 ```
 
-目前仓库只有 3 个命令，放在根目录最直观；如果后续命令明显变多，可以考虑迁移为 `commands/*.js` 或 `clis/ff14risingstones/*.js` 这类分层结构。
+OpenCLI 插件安装时会在插件根目录扫描 `.js` / `.ts` 命令文件，所以根目录保留 `index.js` 作为稳定入口；具体命令实现放在 `commands/` 目录，便于后续继续增加命令或拆分共享工具函数。
 
 ## 开发与验证
 
