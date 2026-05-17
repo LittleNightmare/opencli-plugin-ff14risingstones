@@ -1,3 +1,11 @@
+## 2026-05-17 幻化命令维护记录
+
+新增 `glamour` adapter，面向网页入口 `https://ff14risingstones.web.sdo.com/pc/#/glamour`：
+- 前端 bundle 确认 `/api/home/glamour/glamoursList` 和 `/api/home/glamour/glamourDetail?id=<id>`，对应投稿列表与 `#/glamour/detail/:id` 投稿详情；默认 `--view list`，`--view detail --id 265250` 可读他人公开投稿详情。
+- 网页筛选器参数为 `race_id`、`gender_id`、`createTime=last24H|lastWeek|lastMonth`，排序为 `order=latest|hottest`；标题搜索走 `/api/common/search?type=7&keywords=...`，装备搜索先 `/api/home/gameData/searchEquip?name=...` 取装备 ID，再 `/api/common/search?type=7&keywords=<装备ID>&searchByEquipment=1`。CLI 的 `--equipment` 会尝试前 10 个装备候选，避免网页下拉可手选但命令行只取第一个候选时无结果。
+- 个人“投影外观”专项统计归 `statistics --kind glamour` / `statistics --view detail --kind glamour`，读取 `/api/home/dataCenter/getDress*`；它与投稿详情不是同一套接口，`glamour` adapter 不重复暴露。
+- 使用 `Strategy.COOKIE`/`browser:true` 和页面上下文 `credentials: include`；只读，不发布、不点赞、不收藏、不举报、不修改幻化投稿，也不保存账号密码、cookie 或完整私有响应。
+
 ## 2026-05-17 统计细项视图维护记录
 
 缩小 `statistics` 与网页统计页的覆盖差距：

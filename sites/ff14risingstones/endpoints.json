@@ -186,6 +186,28 @@
     "verified_at": "2026-05-16",
     "notes": "需要登录态 cookie；statistics adapter 使用 browser:true 在页面上下文 fetch。summary 视图输出扁平 metric/value/unit 行，detail 视图按网页细项接口把标量字段展开为 metric/value 行，routes 视图保留网页入口。detail 覆盖 frontline2WeekNew/frontline3JobNew/frontline4Best/frontline5Map/frontline6MapJob、fishNum2/fishBait3/fishBig4/fishAchieve5、dataOpenStatus/getLingShi、gaoNanTeam2/gaoNanJob3/gaoNanFriend4/gaoNanDeadPoint5/gaoNanPhase6、getDressRace1/getDressColor2/getDressOrnament3/getDressVanity4/getDressFullset5、getMKDSupportJob2/getMKDItemUse3/getMKDItemGet4/getMKDItemBox5/getMKDIHistory6/getMKDAchieve7/getMKDLight8、getDDGaoNan2/getDDItem3/getDDHistory4/getDDAchieve5/getDDDeadPoint6/getDDFirstTeam7；字段仍保持原始接口名，避免伪造未验证中文含义。"
   },
+  "glamourCommunity": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/glamour/{glamoursList,glamourDetail}; https://apiff14risingstones.web.sdo.com/api/common/search; https://apiff14risingstones.web.sdo.com/api/home/gameData/searchEquip",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": ["page", "limit", "id", "order", "race_id", "gender_id", "createTime", "keywords", "type", "searchByEquipment", "name"]
+    },
+    "response": "石之家幻化投稿社区数据；glamoursList 返回 data.rows[] 投稿卡片，支持 race_id/gender_id/createTime/order；common/search?type=7&keywords=... 搜标题，searchByEquipment=1 时按装备 ID 搜投稿；gameData/searchEquip?name=... 可把装备名解析为装备 ID；glamourDetail?id=<id> 返回单条投稿详情和 equipments[] 装备/染剂信息。",
+    "verified_at": "2026-05-17",
+    "notes": "需要登录态 cookie；前端 bundle glamour-Pipo6cf-.js、GlamourMain-pCf7RKVm.js、GlamourFilter*.js 和 gameData*.js 确认接口名和参数。对应网页路由为 /pc/#/glamour 和 /pc/#/glamour/detail/:id，可浏览他人公开幻化投稿。"
+  },
+  "glamourDataCenter": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/dataCenter/{getDressTotal7,getDressRace1,getDressColor2,getDressOrnament3,getDressVanity4,getDressFullset5}",
+    "method": "GET",
+    "params": {
+      "required": [],
+      "optional": []
+    },
+    "response": "当前登录角色幻化/武具投影数据；code=10000 表示成功，data 通常为数组。getDressTotal7 为总览，getDressRace1/getDressColor2/getDressOrnament3/getDressVanity4/getDressFullset5 分别对应种族、染剂、饰品、投影物品和套装记录。",
+    "verified_at": "2026-05-17",
+    "notes": "需要登录态 cookie；statistics adapter 使用 browser:true，在同源页面上下文 fetch(credentials: include)。这是当前登录角色个人投影统计，不是 /glamour/detail/:id 投稿详情；glamour adapter 不再重复暴露该统计。只读输出，不保存账号密码、cookie 或完整私有响应。"
+  },
   "getUserInfo": {
     "url": "https://apiff14risingstones.web.sdo.com/api/home/userInfo/getUserInfo",
     "method": "GET",
