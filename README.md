@@ -126,6 +126,12 @@ opencli ff14risingstones statistics --kind all -f yaml
 opencli ff14risingstones statistics --view routes --kind all -f yaml
 ```
 
+查看更接近网页细项的战场统计：
+
+```bash
+opencli ff14risingstones statistics --view detail --kind frontline -f yaml
+```
+
 查看当前登录角色：
 
 ```bash
@@ -223,14 +229,14 @@ opencli ff14risingstones posts --query 零式 --limit 5 -f json
 
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
-| `--view` | `summary` | 查看内容：`summary` 表示真实统计总览，`routes` 表示统计页入口索引。 |
+| `--view` | `summary` | 查看内容：`summary` 表示真实统计总览，`detail` 表示网页细项数据，`routes` 表示统计页入口索引。 |
 | `--kind` | `glamour` | 统计类型：`all` 全部已有数据，或 `frontline` 战场、`ultimate` 绝境战、`fishing` 钓鱼、`savage` 零式、`glamour` 幻化/武具投影、`occult` 蜃景幻界、`deepdungeon` 深层迷宫。 |
 | `--ddType` | `dd4` | 深层迷宫统计使用的类型参数：`dd1/dd2/dd3/dd4`；仅 `--kind deepdungeon` 使用。 |
 
 每行包含：
 
 - `view` / `kind` / `rank`：结果视图、统计类型和序号
-- `metric` / `label`：机器可读指标名和中文指标名
+- `metric` / `label`：机器可读指标名和中文指标名；`detail` 视图中 `metric` 会带上细项分组和原始字段名，便于追踪网页接口，并会跳过内部角色/用户 ID 字段
 - `value` / `unit`：指标值和单位
 - `detail` / `updatedTime` / `url`：补充说明、更新时间和石之家统计页面地址
 
@@ -331,6 +337,7 @@ opencli ff14risingstones posts --limit 3 -f json
 opencli ff14risingstones recruit --view detail --type party --id 50192 -f json
 opencli ff14risingstones recruit-guild --view detail --id 12345 -f json
 opencli ff14risingstones statistics -f json
+opencli ff14risingstones statistics --view detail --kind frontline -f json
 opencli ff14risingstones checkin --view rewards -f json
 ```
 
@@ -352,7 +359,7 @@ npm run pack:dry-run
 - `statistics`、`me`、`notifications` 和 `checkin` 依赖本机 Chrome 登录态，无法在未登录环境中读取账号数据。
 - `recruit` 只读真实招募列表/详情和筛选配置；不发布、修改、删除或响应招募。部队招待列表/详情接口需要登录态，未登录会返回登录提示。
 - `recruit-guild` 只读部队招待列表/详情；不响应招募，也不保存账号密码、cookie 或原始私有响应。
-- `statistics` 只读当前登录角色统计总览和统计页入口；不保存账号密码、cookie 或完整私有响应。
+- `statistics` 只读当前登录角色统计总览、网页细项统计和统计页入口；不保存账号密码、cookie 或完整私有响应。
 - 石之家网页接口如果改版，字段映射可能需要更新。
 - 除 `checkin --action sign` 这个明确签到动作外，本插件不提供发帖、回复、点赞、领取签到累计奖励等写操作。
 
@@ -363,7 +370,7 @@ npm run pack:dry-run
 - `posts`：CLI 覆盖公开帖子/攻略列表与搜索；网页端的发布、回复、点赞、收藏、关注、图片富交互、帖子编辑和个人动态流不在本插件范围内。
 - `recruit`：CLI 覆盖公开真实招募列表、详情和筛选配置；网页端的发布招募、响应招募、编辑/删除/刷新招募、富文本展示、图片交互和登录态“我的招募/响应”管理不在 `recruit` 里。
 - `recruit-guild`：CLI 覆盖部队招待列表和详情读取；网页端的发布/响应部队招待、成员管理、详情页交互操作和消息跳转不在本插件范围内。
-- `statistics`：CLI 当前覆盖当前登录角色的统计总览指标和统计页入口；网页端的图表、分页榜单、下拉筛选、分享卡片/二维码，以及战场职业/地图、钓鱼鱼饵/大鱼/成就、绝境队伍/职业/死亡点/阶段、零式楼层明细、幻化染剂/单品/套装分页、新月岛道具/历史/成就/光、深层迷宫道具/历史/死亡点/首次队伍等细项还没有完整表格化。
+- `statistics`：CLI 当前覆盖当前登录角色的统计总览指标、统计页入口，以及 `detail` 视图中的战场职业/地图、零式开放状态/副本明细/总览细项、钓鱼鱼饵/大鱼/成就、绝境队伍/职业/死亡点/阶段、幻化染剂/单品/套装、新月岛道具/历史/成就/光、深层迷宫道具/历史/死亡点/首次队伍等网页细项接口；网页端的图表渲染、分页交互、下拉筛选、分享卡片/二维码和部分接口字段的中文化展示仍未完整复刻。
 - `me`：CLI 覆盖当前登录角色基础档案；网页端的头像/装扮展示、角色切换弹窗、关注/粉丝列表、个人主页动态、隐私设置和账号绑定管理不在当前输出里。
 - `notifications`：CLI 只读未读计数，并刻意不进入消息详情页；网页端的消息详情、已读状态变更、回复跳转、系统消息正文和我的招募/响应详情没有读取，以避免误触发状态变化。
 - `checkin`：CLI 覆盖签到状态、奖励/日志读取，以及显式 `--action sign` 每日签到；网页端的累计奖励领取、活动页富展示和其他活动交互不在当前命令里。

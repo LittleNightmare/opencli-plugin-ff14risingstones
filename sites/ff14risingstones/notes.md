@@ -1,3 +1,15 @@
+## 2026-05-17 统计细项视图维护记录
+
+缩小 `statistics` 与网页统计页的覆盖差距：
+- 新增 `--view detail`，继续使用 `Strategy.COOKIE`/`browser:true` 和页面上下文 `credentials: include`，读取 `/api/home/dataCenter/*` 的网页细项接口。
+- `detail` 视图保持现有输出列不变，把每个细项接口返回行的标量字段展开为 `metric/value` 行；`metric` 使用 `分组.序号.原始字段名`，并跳过内部角色/用户 ID 字段，避免在未逐字段肉眼对齐前伪造中文语义或暴露不必要标识。
+- 当前覆盖战场近周/职业/最佳/地图，零式开放状态/副本明细/总览细项，钓鱼鱼类/鱼饵/大鱼/成就，绝境队伍/职业/队友/倒地点/阶段，幻化种族/染剂/饰品/投影/套装，新月岛道具/历史/成就/光，深层迷宫道具/历史/倒地点/首次队伍等 bundle 已记录接口。
+- 仍然只读：不保存账号密码、cookie 或完整私有响应；角色无对应玩法数据时单独查询会抛 `EmptyResultError`，`--kind all` 会跳过空数据类型。
+
+补齐零式细项：
+- 静态 bundle 确认 `#/statistics/savage` 先读 `/home/dataCenter/dataOpenStatus` 的 `lingshi` 开放状态，再读 `/home/dataCenter/getLingShi` 明细数组和 `/home/dataCenter/getLingShiTotal` 总览数组首项。
+- `statistics --view detail --kind savage` 因此追加 `openStatus`、`territory` 与 `total` 分组；其中 `openStatus` 只输出零式页实际关心的 `lingshi` flag，字段仍按原始接口名输出，等有更多账号样本后再逐项中文化。
+
 ## 2026-05-16 统计入口命令维护记录
 
 补齐 `statistics` adapter 暴露与记录：
