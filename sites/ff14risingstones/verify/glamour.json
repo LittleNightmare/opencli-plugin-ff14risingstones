@@ -1,0 +1,54 @@
+{
+  "args": {
+    "view": "list",
+    "limit": 3,
+    "order": "latest"
+  },
+  "expect": {
+    "rowCount": {
+      "min": 1,
+      "max": 3
+    },
+    "columns": [
+      "view",
+      "rank",
+      "glamourId",
+      "title",
+      "author",
+      "characterName",
+      "server",
+      "races",
+      "jobs",
+      "itemId",
+      "name",
+      "category",
+      "value",
+      "unit",
+      "detail",
+      "imageUrl",
+      "likeCount",
+      "favoriteCount",
+      "createdTime",
+      "url"
+    ],
+    "types": {
+      "view": "string",
+      "rank": "number",
+      "glamourId": "string",
+      "name": "string",
+      "category": "string",
+      "url": "string"
+    },
+    "patterns": {
+      "view": "^(list|detail|equipment|routes)$",
+      "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/#/glamour"
+    },
+    "notEmpty": [
+      "view",
+      "glamourId",
+      "name",
+      "category",
+      "url"
+    ]
+  }
+}

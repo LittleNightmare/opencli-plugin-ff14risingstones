@@ -15,7 +15,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "check": "node --check index.js && node --check commands/posts.js && node --check commands/recruit.js && node --check commands/recruit-guild.js && node --check commands/statistics.js && node --check commands/me.js && node --check commands/notifications.js && node --check commands/checkin.js",
+    "check": "node --check index.js && node --check commands/posts.js && node --check commands/recruit.js && node --check commands/recruit-guild.js && node --check commands/statistics.js && node --check commands/glamour.js && node --check commands/me.js && node --check commands/notifications.js && node --check commands/checkin.js",
     "pack:dry-run": "npm pack --dry-run"
   },
   "files": [
