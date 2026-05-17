@@ -4,7 +4,7 @@ import { cli, Strategy } from '@jackwener/opencli/registry';
 const API_BASE = 'https://apiff14risingstones.web.sdo.com/api';
 const WEB_BASE = 'https://ff14risingstones.web.sdo.com/pc/index.html';
 const HOST = 'ff14risingstones.web.sdo.com';
-const VIEWS = new Set(['summary', 'routes']);
+const VIEWS = new Set(['summary', 'detail', 'routes']);
 const DEEP_DUNGEON_TYPES = new Set(['dd1', 'dd2', 'dd3', 'dd4']);
 
 const STATISTICS = [
@@ -19,6 +19,69 @@ const STATISTICS = [
 
 const KIND_LABELS = Object.fromEntries(STATISTICS.map(([key, name]) => [key, name]));
 const KIND_ROUTES = Object.fromEntries(STATISTICS.map(([key, , route]) => [key, route]));
+
+const DETAIL_GROUPS = {
+  frontline: [
+    ['total', '总览', '/home/dataCenter/frontline1TotalNew'],
+    ['weekly', '近周趋势', '/home/dataCenter/frontline2WeekNew'],
+    ['job', '职业统计', '/home/dataCenter/frontline3JobNew'],
+    ['best', '最佳记录', '/home/dataCenter/frontline4Best'],
+    ['map', '地图统计', '/home/dataCenter/frontline5Map'],
+    ['mapJob', '地图职业统计', '/home/dataCenter/frontline6MapJob'],
+  ],
+  ultimate: [
+    ['firstClear', '首通记录', '/home/dataCenter/gaoNanFirst1'],
+    ['team', '队伍统计', '/home/dataCenter/gaoNanTeam2'],
+    ['job', '职业统计', '/home/dataCenter/gaoNanJob3'],
+    ['friend', '队友统计', '/home/dataCenter/gaoNanFriend4'],
+    ['deadPoint', '倒地点统计', '/home/dataCenter/gaoNanDeadPoint5'],
+    ['phase', '阶段统计', '/home/dataCenter/gaoNanPhase6'],
+  ],
+  fishing: [
+    ['total', '总览', '/home/dataCenter/fishTotal1'],
+    ['fish', '鱼类统计', '/home/dataCenter/fishNum2'],
+    ['bait', '鱼饵统计', '/home/dataCenter/fishBait3'],
+    ['bigFish', '大鱼统计', '/home/dataCenter/fishBig4'],
+    ['achievement', '成就统计', '/home/dataCenter/fishAchieve5'],
+  ],
+  savage: [
+    ['openStatus', '开放状态', '/home/dataCenter/dataOpenStatus'],
+    ['territory', '副本明细', '/home/dataCenter/getLingShi'],
+    ['total', '总览', '/home/dataCenter/getLingShiTotal'],
+  ],
+  glamour: [
+    ['race', '种族统计', '/home/dataCenter/getDressRace1'],
+    ['color', '染剂统计', '/home/dataCenter/getDressColor2'],
+    ['ornament', '饰品统计', '/home/dataCenter/getDressOrnament3'],
+    ['vanity', '武具投影统计', '/home/dataCenter/getDressVanity4'],
+    ['fullset', '套装统计', '/home/dataCenter/getDressFullset5'],
+    ['total', '总览', '/home/dataCenter/getDressTotal7'],
+  ],
+  occult: [
+    ['total', '总览', '/home/dataCenter/getMKDTotal1'],
+    ['supportJob', '支援职业统计', '/home/dataCenter/getMKDSupportJob2'],
+    ['itemUse', '道具使用统计', '/home/dataCenter/getMKDItemUse3'],
+    ['itemGet', '道具获取统计', '/home/dataCenter/getMKDItemGet4'],
+    ['itemBox', '宝箱统计', '/home/dataCenter/getMKDItemBox5'],
+    ['history', '历史记录', '/home/dataCenter/getMKDIHistory6'],
+    ['achievement', '成就统计', '/home/dataCenter/getMKDAchieve7'],
+    ['light', '灵光统计', '/home/dataCenter/getMKDLight8'],
+  ],
+  deepdungeon: [
+    ['territory', '迷宫总览', '/home/dataCenter/getDDTerr1'],
+    ['ultimate', '高难统计', '/home/dataCenter/getDDGaoNan2'],
+    ['item', '道具统计', '/home/dataCenter/getDDItem3'],
+    ['history', '历史记录', '/home/dataCenter/getDDHistory4'],
+    ['achievement', '成就统计', '/home/dataCenter/getDDAchieve5'],
+    ['deadPoint', '倒地点统计', '/home/dataCenter/getDDDeadPoint6'],
+    ['firstTeam', '首次队伍', '/home/dataCenter/getDDFirstTeam7'],
+  ],
+};
+
+const DETAIL_IGNORED_FIELDS = new Set(['character_id', 'characterId', 'uid', 'user_id', 'userId', 'role_id', 'roleId', 'tempsuid']);
+const DETAIL_FIELD_ALLOWLISTS = {
+  'savage.openStatus': new Set(['lingshi']),
+};
 
 function toText(value) {
   const text = String(value ?? '').replaceAll('\u0000', '').trim();
@@ -40,7 +103,7 @@ function normalizeKind(value) {
 
 function normalizeView(value) {
   const view = String(value ?? 'summary').trim().toLowerCase();
-  if (!VIEWS.has(view)) throw new ArgumentError('view must be one of: summary, routes');
+  if (!VIEWS.has(view)) throw new ArgumentError('view must be one of: summary, detail, routes');
   return view;
 }
 
@@ -87,6 +150,67 @@ function makeMetricRows(kind, metrics) {
     }));
 }
 
+function isScalar(value) {
+  return value === null || ['string', 'number', 'boolean'].includes(typeof value);
+}
+
+function compactObjectText(value) {
+  if (!value || typeof value !== 'object') return null;
+  const parts = Object.entries(value)
+    .filter(([field, entryValue]) => !DETAIL_IGNORED_FIELDS.has(field) && isScalar(entryValue) && entryValue !== null && entryValue !== '')
+    .slice(0, 6)
+    .map(([key, entryValue]) => `${key}=${entryValue}`);
+  return parts.length > 0 ? parts.join(', ') : null;
+}
+
+function normalizeRows(data) {
+  if (Array.isArray(data)) return data.filter((row) => row && typeof row === 'object');
+  if (!data || typeof data !== 'object') return [];
+  for (const key of ['rows', 'list', 'data']) {
+    if (Array.isArray(data[key])) return data[key].filter((row) => row && typeof row === 'object');
+  }
+  return [data];
+}
+
+function rowTitle(row, fallback) {
+  for (const key of ['name', 'title', 'label', 'job_name', 'territory_name', 'territory_type', 'item_name', 'fish_name', 'map_name', 'achievement_name', 'log_time']) {
+    const text = toText(row[key]);
+    if (text) return text;
+  }
+  return fallback;
+}
+
+function detailValue(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : toText(value);
+  return toNumber(value) ?? toText(value);
+}
+
+function allowedDetailRow(kind, groupKey, row) {
+  const allowlist = DETAIL_FIELD_ALLOWLISTS[`${kind}.${groupKey}`];
+  if (!allowlist) return row;
+  return Object.fromEntries(Object.entries(row).filter(([field]) => allowlist.has(field)));
+}
+
+function detailMetricRows(kind, groupKey, groupLabel, rows) {
+  return rows.flatMap((row, rowIndex) => {
+    const outputRow = allowedDetailRow(kind, groupKey, row);
+    return Object.entries(outputRow)
+      .filter(([field, value]) => !DETAIL_IGNORED_FIELDS.has(field) && isScalar(value) && value !== null && value !== '')
+      .map(([field, value]) => ({
+      view: 'detail',
+      kind,
+      rank: 0,
+      metric: `${groupKey}.${rowIndex + 1}.${field}`,
+      label: `${groupLabel}：${field}`,
+      value: detailValue(value),
+      unit: null,
+      detail: rowTitle(outputRow, compactObjectText(outputRow) ?? groupLabel),
+      updatedTime: toText(outputRow.log_time ?? outputRow.update_time ?? outputRow.updated_at ?? outputRow.create_time),
+      url: statUrl(kind),
+    }));
+  });
+}
+
 function firstRow(data) {
   return Array.isArray(data) ? data.find((row) => row && typeof row === 'object') : data;
 }
@@ -131,6 +255,34 @@ async function fetchData(page, kind, path, params) {
   const row = firstRow(data);
   if (!row) throw new EmptyResultError('ff14risingstones statistics', `${kind} has no statistics data for the current character`);
   return row;
+}
+
+async function detailRowsForKind(page, args, kind) {
+  const groups = DETAIL_GROUPS[kind] ?? [];
+  const rows = [];
+  for (const [groupKey, groupLabel, path] of groups) {
+    if (rows.length > 0) await sleep(page, 700);
+    const params = kind === 'deepdungeon' ? { dd_type: normalizeDeepDungeonType(args.ddType) } : {};
+    const data = checkedPayload(await requestLoggedInJson(page, path, params), `ff14risingstones statistics ${kind} ${groupKey}`);
+    rows.push(...detailMetricRows(kind, groupKey, groupLabel, normalizeRows(data)));
+  }
+  if (rows.length === 0) throw new EmptyResultError('ff14risingstones statistics', `${kind} has no detailed statistics data for the current character`);
+  return rows.map((row, index) => ({ ...row, rank: index + 1 }));
+}
+
+async function detailRows(page, args, kind) {
+  const kinds = kind === 'all' ? Object.keys(DETAIL_GROUPS) : [kind];
+  const rows = [];
+  for (const currentKind of kinds) {
+    if (rows.length > 0) await sleep(page, 900);
+    try {
+      rows.push(...await detailRowsForKind(page, args, currentKind));
+    } catch (error) {
+      if (kind !== 'all' || !(error instanceof EmptyResultError)) throw error;
+    }
+  }
+  if (rows.length === 0) throw new EmptyResultError('ff14risingstones statistics', 'API returned no detailed statistics rows');
+  return rows.map((row, index) => ({ ...row, rank: index + 1 }));
 }
 
 async function summaryFrontline(page) {
@@ -244,7 +396,7 @@ cli({
   browser: true,
   navigateBefore: false,
   args: [
-    { name: 'view', type: 'string', default: 'summary', help: '查看内容：summary（统计总览）/ routes（统计页入口）' },
+    { name: 'view', type: 'string', default: 'summary', help: '查看内容：summary（统计总览）/ detail（网页细项）/ routes（统计页入口）' },
     { name: 'kind', type: 'string', default: 'glamour', help: '统计类型：all/frontline/ultimate/fishing/savage/glamour/occult/deepdungeon' },
     { name: 'ddType', type: 'string', default: 'dd4', help: 'deepdungeon 使用的深层迷宫类型：dd1/dd2/dd3/dd4' },
   ],
@@ -253,6 +405,7 @@ cli({
     const view = normalizeView(args.view);
     const kind = normalizeKind(args.kind);
     if (view === 'routes') return routeRows(kind);
+    if (view === 'detail') return detailRows(page, args, kind);
     return summaryRows(page, args, kind);
   },
 });

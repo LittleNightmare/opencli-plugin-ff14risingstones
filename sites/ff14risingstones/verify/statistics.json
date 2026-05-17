@@ -28,7 +28,7 @@
       "url": "string"
     },
     "patterns": {
-      "view": "^(summary|routes)$",
+      "view": "^(summary|detail|routes)$",
       "kind": "^(frontline|ultimate|fishing|savage|glamour|occult|deepdungeon)$",
       "url": "^https://ff14risingstones\\.web\\.sdo\\.com/pc/index\\.html#/statistics/(frontline|ultimate|fishing|savage|glamour|occult|deepdungeon)$"
     },
