@@ -1,3 +1,17 @@
+## 2026-05-18 招募命令维护记录
+
+参考 `today080221/risingstones-partyfinder-helper` 补强 `recruit` 的副本招募语义：
+- 副本列表接口仍按公开接口裸 fetch 读取；成功响应兼容 `code/Code` 与 `data/Data`，成功码兼容 `10000` 和参考项目中处理过的 `0`。
+- `recruit --type party` 追加网页端团队阵营筛选参数：`--sonTeamKey`/`--alliance` 对应 `son_team_key`（常见为 `A/B/C`），`--sonTeamPosition` 对应 `son_team_position`。
+- `jobs` 列不只输出 `jobInfo.value`，也保留 `need_job` 的 `job:<id>` 标记、`32` 的“全部职业”提示，以及 MT/ST/H1/H2/D1-D4/T/H 位置值，方便和网页队内位置过滤对齐。
+- 详情输出合并 `team_detail`、`recruit_require`、`strategy_desc`、`contact_info_mask` 及其 mask 字段，减少只读详情相对网页端的信息缺口。
+- `--view config --kind party` 会把 `fb_type/team_composition/weight` 带进分类或摘要；`style` 配置链接修正到萌新招待入口而非部队入口。
+
+继续补齐全量分页聚合与本地高级筛选：
+- `recruit --type party --allPages true` 会从当前 `page` 开始按 `fetchPageSize` 多页读取，直到官方 `count` 满足、遇到空页或达到 `maxPages`；默认不启用，避免普通列表命令变慢。
+- 聚合后再执行本地过滤：`job`、`labelMode=all|any`、`progressText`、`strategyText`、`excludeText`、`timeText/timeStart/timeEnd/timeDays/dailyMaxHours/showUnparsedTime` 和 `noDuplicateJobs`。
+- 时间过滤是 CLI 轻量实现，支持常见“晚上 20-24”“周一/周三/周末”“每日时长上限”等文本；没有完整移植网页助手的复杂解析和 NGA 来源合并。
+
 ## 2026-05-17 幻化命令维护记录
 
 新增 `glamour` adapter，面向网页入口 `https://ff14risingstones.web.sdo.com/pc/#/glamour`：

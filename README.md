@@ -85,6 +85,22 @@ opencli ff14risingstones posts --query 零式 --limit 10 -f yaml
 opencli ff14risingstones recruit --view list --type party --partyType 绝境战 --limit 5 -f yaml
 ```
 
+按具体副本、队伍构成和团队阵营位置筛选招募：
+
+```bash
+opencli ff14risingstones recruit --type party --partyName 巴哈姆特绝境战 --team 满编小队 --sonTeamKey A --sonTeamPosition 7 --limit 5 -f yaml
+```
+
+这个例子对应网页端副本招募的高级筛选：`partyName` 限定副本，`team` 限定队伍构成，`sonTeamKey`/`sonTeamPosition` 对应团队阵营里的具体位置。输出里的 `jobs` 会同时展示职业名、`job:<id>` 和 MT/ST/H/D 等队内位置，方便判断招募缺口。
+
+聚合多页后做本地高级筛选：
+
+```bash
+opencli ff14risingstones recruit --type party --partyName 巴哈姆特绝境战 --allPages true --job 30 --noDuplicateJobs true --progressText 开荒 --excludeText 代打,老板 --timeStart 20 --timeEnd 24 --timeDays 周一,周三,周五 --limit 10 -f yaml
+```
+
+这个例子会先按官方 `count` 自动翻页抓取副本招募，再在本地过滤：保留进度含“开荒”、排除“代打/老板”、活动时间在 20:00-24:00 且匹配指定星期、并且队内位置尚未占用职业 ID `30` 的招募。适合官方接口单页结果太少、但你想按时间和职业缺口继续筛的时候使用。
+
 查看某条招募详情：
 
 ```bash
@@ -227,6 +243,12 @@ opencli ff14risingstones posts --query 零式 --limit 5 -f json
 | `--kind` | `all` | `--view config` 使用：`all/job/style/party/label/guildLabel/category/area`。 |
 | `--areaId` / `--groupId` | 空 | 目标大区/服务器 ID；可用 `--view config --kind area` 查看大区和服务器行，服务器行的 `summary` 会标出 `areaId` / `groupId`。 |
 | `--job` / `--position` | 空 | `--job` 按职业 ID 或职业名在返回的副本招募中本地过滤；可用 `--view config --kind job` 查看。`--position` 是网页副本位置参数，多个用逗号分隔。 |
+| `--sonTeamKey` / `--alliance` / `--sonTeamPosition` | 空 | 团队阵营筛选；`sonTeamKey`/`alliance` 通常为 `A/B/C`，`sonTeamPosition` 是该阵营内的位置编号，对应网页端 `team_position` 矩阵。 |
+| `--allPages` / `--fetchPageSize` / `--maxPages` | `false` / `100` / `80` | 仅 `party` 使用；`--allPages true` 会从当前 `page` 开始按官方 `count` 自动翻页聚合，再执行本地过滤和 `limit` 截断。 |
+| `--labelMode` | `all` | 仅 `party` 本地过滤使用；配合 `--label` 控制标签是全部命中（`all`）还是任一命中（`any`）。数字标签会精确匹配官方 ID；中文标签名属于本地过滤，建议配合 `--allPages true` 使用。 |
+| `--progressText` / `--strategyText` / `--excludeText` | 空 | 仅 `party` 本地过滤使用；进度、攻略/要求包含过滤和全局排除关键词，多个关键词用逗号分隔。 |
+| `--timeText` / `--timeStart` / `--timeEnd` / `--timeDays` / `--dailyMaxHours` / `--showUnparsedTime` | 空 / 空 / 空 / 空 / 空 / `false` | 仅 `party` 本地时间过滤使用；支持按活动时间文本、小时范围、星期、每日时长筛选。存在时间条件但无法解析时，默认排除，可用 `--showUnparsedTime true` 保留。 |
+| `--noDuplicateJobs` | `false` | 仅 `party` 本地过滤使用；配合 `--job` 的职业 ID，排除队内位置已占用相同职业 ID 的招募。 |
 | `--partyType` / `--partyName` / `--team` | 空 | 副本类型、副本名、队伍构成筛选。 |
 | `--label` / `--style` / `--category` | 空 | 标签、玩法风格、其他招募分类 ID，多个用逗号分隔。 |
 | `--identity` / `--rpType` / `--rpStatus` / `--order` | 空 | 萌新和 RP 页面对应的高级筛选项。 |
@@ -237,7 +259,7 @@ opencli ff14risingstones posts --query 零式 --limit 5 -f json
 - `title` / `category` / `author`：标题、分类和发布角色
 - `server` / `targetServer`：发布者区服和目标区服
 - `summary` / `detail` / `requirements` / `schedule`：摘要、详情正文、招募要求和活动时间
-- `tags` / `jobs` / `responseCount` / `updatedTime` / `url`：标签、需求职业、响应/收藏数量、更新时间和网页链接
+- `tags` / `jobs` / `responseCount` / `updatedTime` / `url`：标签、需求职业/职业 ID/队内位置、响应/收藏数量、更新时间和网页链接
 
 ### `recruit-guild`
 

@@ -41,18 +41,18 @@
     },
     "response": "data[] 招募玩法风格配置，code=10000 表示成功",
     "verified_at": "2026-05-16",
-    "notes": "公开接口裸 fetch 可用；recruit adapter 输出为 kind=style 的表格行，并链接到招募部队入口。"
+    "notes": "公开接口裸 fetch 可用；recruit adapter 输出为 kind=style 的表格行，并链接到萌新招待入口。"
   },
   "recruitFbList": {
     "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/recruitFbList",
     "method": "GET",
     "params": {
       "required": ["page", "limit"],
-      "optional": ["fb_name", "fb_type", "position", "team_composition", "target_area_id", "target_group_id", "label", "son_team_position"]
+      "optional": ["fb_name", "fb_type", "position", "team_composition", "target_area_id", "target_group_id", "label", "son_team_key", "son_team_position"]
     },
-    "response": "data.count + data.rows[] 副本招募列表，含 fb_type、fb_name、progress、strategy、jobInfo、labelInfo 等字段",
+    "response": "data.count + data.rows[] 副本招募列表，含 fb_type、fb_name、progress、strategy、need_job、jobInfo、labelInfo、team_position 与 MT/ST/H1/H2/D1-D4 等字段",
     "verified_at": "2026-05-16",
-    "notes": "公开接口裸 fetch 可用；网页 party 页使用 limit=9。"
+    "notes": "公开接口裸 fetch 可用；网页 party 页使用 limit=9。参考 risingstones-partyfinder-helper，fb_name/fb_type/team_composition 可限定数据范围，son_team_key=A/B/C 与 son_team_position 对应团队阵营位置筛选。recruit --allPages true 会使用 page/fetchPageSize 多页读取到 count 或 maxPages 后，在本地执行 job、labelMode、progressText、strategyText、excludeText、time*、noDuplicateJobs 过滤。"
   },
   "getRecruitFbDetail": {
     "url": "https://apiff14risingstones.web.sdo.com/api/home/recruit/getRecruitFbDetail",
@@ -61,7 +61,7 @@
       "required": ["id"],
       "optional": []
     },
-    "response": "data 单条副本招募详情，含 team_detail_mask、recruit_require_mask、strategy_desc_mask、need_job",
+    "response": "data 单条副本招募详情，含 team_detail/team_detail_mask、recruit_require/recruit_require_mask、strategy_desc/strategy_desc_mask、contact_info_mask、need_job",
     "verified_at": "2026-05-16",
     "notes": "公开接口裸 fetch 可用；RSSHub 也使用该详情接口。"
   },
